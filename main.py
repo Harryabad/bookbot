@@ -1,15 +1,25 @@
-path = "books/frankenstein.txt"
 
 def main():
-    with open(path) as f:
-        file_contents = f.read()
-        #print(file_contents)
-    return file_contents
+    path = "books/frankenstein.txt"
+    book_text = read_book(path)
+    num_words = word_count(book_text)
+    character_dictionary = character_count(book_text)
+    characters_sorted = character_dict(character_dictionary)
+
+    print(f"--- Begin report of {path} ---")
+    print(f"{num_words} words was found in {path} \n")
+
+    for i in characters_sorted:
+        print(f"The '{i['character']}' character was found {i['count']} times", end=" ")
+        print()
+    print("--- End report ---")
+
+
 
 def word_count(file_contents):
     words = file_contents.split()
     count = len(words)
-    print(f"{count} words in this book \n")
+    return count
 
 def character_count(file_contents):
     letter_count = {}
@@ -27,19 +37,14 @@ def character_count(file_contents):
 def sort_on(letter_count):
     return letter_count["count"]
 
-def convert_to_list_of_dicts(counts):
+def character_dict(counts):
     list_of_dicts = [{"character": char, "count": count} for char, count in counts.items()]
+    list_of_dicts.sort(reverse=True, key=sort_on)
     return list_of_dicts
 
+def read_book(path):
+    with open(path) as f:
+        return f.read()
+    
 if __name__ == "__main__":
-    print(f"--- Begin report of {path} ---")
-    file_contents = main()
-    letter_count = character_count(file_contents)
-    dicts = convert_to_list_of_dicts(letter_count)
-    word_count(file_contents)
-    #print(character_count(file_contents), "\n")
-    dicts.sort(reverse=True, key=sort_on)
-    for i in dicts:
-        print(f"The '{i['character']}' character was found {i['count']} times", end=" ")
-        print()
-    print("--- End report ---")
+    main()
